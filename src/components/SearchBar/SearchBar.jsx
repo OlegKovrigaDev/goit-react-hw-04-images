@@ -1,41 +1,45 @@
-import { Component } from 'react';
+import React, { useState, useCallback } from 'react';
 import styles from './SearchBar.module.css';
 import { IoSearch } from 'react-icons/io5';
 
-export default class SearchBar extends Component {
-  state = {
-    query: '',
-  };
+const SearchBar = ({ onSubmit }) => {
+  const [query, setQuery] = useState('');
 
-  handleChange = e => {
-    this.setState({ query: e.target.value });
-  };
+  const handleChange = useCallback(e => {
+    setQuery(e.target.value);
+  }, []);
 
-  handleSubmit = e => {
-    const query = this.state.query.trim();
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      const trimmedQuery = query.trim();
 
-    this.props.onSubmit(query);
-    this.setState({ query: '' });
-  };
-  render() {
-    return (
-      <header className={styles.searchbar}>
-        <form className={styles['search-form']} onSubmit={this.handleSubmit}>
-          <button type="submit" className={styles['search-form-button']}>
-            <IoSearch />
-          </button>
-          <input
-            className={styles['search-form-input']}
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            value={this.state.query}
-            onChange={this.handleChange}
-          />
-        </form>
-      </header>
-    );
-  }
-}
+      if (trimmedQuery) {
+        onSubmit(trimmedQuery);
+        setQuery('');
+      }
+    },
+    [query, onSubmit]
+  );
+
+  return (
+    <header className={styles.searchbar}>
+      <form className={styles['search-form']} onSubmit={handleSubmit}>
+        <button type="submit" className={styles['search-form-button']}>
+          <IoSearch />
+        </button>
+        <input
+          className={styles['search-form-input']}
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={query}
+          onChange={handleChange}
+        />
+      </form>
+    </header>
+  );
+};
+
+export default SearchBar;
