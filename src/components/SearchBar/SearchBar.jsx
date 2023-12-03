@@ -1,27 +1,23 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import styles from './SearchBar.module.css';
 import { IoSearch } from 'react-icons/io5';
 
 const SearchBar = ({ onSubmit }) => {
   const [query, setQuery] = useState('');
 
-  const handleChange = useCallback(e => {
+  const handleChange = e => {
     setQuery(e.target.value);
-  }, []);
+  };
 
-  const handleSubmit = useCallback(
-    e => {
-      e.preventDefault();
-      const trimmedQuery = query.trim();
+  const handleSubmit = e => {
+    e.preventDefault();
+    const trimmedQuery = query.trim();
 
-      if (trimmedQuery) {
-        onSubmit(trimmedQuery);
-        setQuery('');
-      }
-    },
-    [query, onSubmit]
-  );
-
+    if (trimmedQuery) {
+      onSubmit(trimmedQuery);
+      setQuery('');
+    }
+  };
   return (
     <header className={styles.searchbar}>
       <form className={styles['search-form']} onSubmit={handleSubmit}>
